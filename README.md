@@ -1,7 +1,7 @@
 # GameOfLife
 Just simple implementation of Conways game of Life using SFML for the graphics
 
-This was one of my first projects in which I used OOP (and c++ in general), so the it has some messy code all over the place.
+This old project is one of my first projects in which I used OOP (and c++ in general), so the it has some messy code all over the place.
  
 
 ## How to run:
