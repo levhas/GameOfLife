@@ -5,13 +5,11 @@ This was one of my first projects in which I used OOP (and c++ in general), so t
  
 
 ## How to run:
-If you are on linux, SFML must be installed from your distros package manager.
+g++ is needed for building
+
+Build using the provided build.sh script and if that fails, manually building with cmake should work.
+
 I don't know if this will compile on Windows.
 
-then compile and run the the project, like bellow. 
-```
-g++ -c main.cpp
-g++ main.o -o GameOfLife -lsfml-graphics -lsfml-window -lsfml-system
-./GameOfLife
-```
+
 
