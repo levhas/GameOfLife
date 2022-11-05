@@ -11,10 +11,13 @@ private:
     int id;
     int numOfNeighbors;  
     Cell * neighbors[8];
+    int life;
+    bool changed;
     
 public:
     Cell(int current, int id);
     Cell(int id);
+    Cell(Pos pos);
     Cell();
     ~Cell();
     void setCurrent();
@@ -34,7 +37,8 @@ Cell::Cell() :
     id()
 {    
     numOfNeighbors = 0;
-    
+    life = 10;
+    changed = false;
 } 
 
 Cell::Cell(int id) :
@@ -43,6 +47,7 @@ Cell::Cell(int id) :
     id(id)
 {    
     numOfNeighbors = 0;
+    changed = false;
     
 }    
 Cell::Cell(int current, int id) :
@@ -51,9 +56,11 @@ Cell::Cell(int current, int id) :
     id(id)
 {
     numOfNeighbors = 0;
+    changed = false;
 }
 
 void Cell::setNext(int next){
+    changed = true;
     this->next = next;
 }
 
@@ -62,11 +69,15 @@ int Cell::getNext(){
 }
 
 int Cell::getCurrent(){
+    if(!changed){
+        life--;
+    }
     return current;
 }
 
 void Cell::setCurrent(){
     this->current = this->next;
+    this->next = 0;
     
 }
 void Cell::addNeighbor(Cell *neighbor){
@@ -89,7 +100,11 @@ int Cell::numOfAliveNeigbors(){
 }
 
 
-
+struct Pos
+{
+    int x;
+    int y;
+};
 
 Cell::~Cell()
 {

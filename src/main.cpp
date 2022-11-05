@@ -15,11 +15,11 @@ int main()
 {
     bool pause = false;
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(0);
     ImGui::SFML::Init(window);
     
-    Grid grid(100, &window);
-    Game game(100, &grid);
+    Grid grid(200, &window);
+    Game game(100,100, &grid);
 
     game.Initialize();
     
