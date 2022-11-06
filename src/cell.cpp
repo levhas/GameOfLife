@@ -24,6 +24,7 @@ public:
     Cell(Pos position);
     Cell();
     ~Cell();
+    Cell(Pos position, int value);
     Pos pos;
 
     void setCurrent();
@@ -41,15 +42,22 @@ Cell::Cell(Pos position) :
     pos(position)
 {
     current = 1;
-    next = 0;
+    next = 1;
     life = 10;
     changed = false;
 }
-
+Cell::Cell(Pos position, int value) :
+    pos(position)
+{
+    current = value;
+    next = 1;
+    life = 10;
+    changed = false;
+}
 Cell::Cell()
 {
     current = 1;
-    next = 0;
+    next = 1;
     life = 10;
     changed = false;
 }
@@ -64,9 +72,10 @@ int Cell::getNext(){
 }
 
 int Cell::getCurrent(){
-    if(!changed){
+    if(!changed && current == 0){
         life--;
     }
+    life = 10;
     changed = false;
     return current;
 }
@@ -106,6 +115,27 @@ bool operator < (const Cell& l, const Cell& r) {
 bool operator < (const Pos& l, const Pos& r) {
         return (l.x<r.x || (l.x==r.x && l.y<r.y));
     }
+bool operator == (const Pos& l, const Pos& r) {
+        return (l.x == r.x && l.y == r.y);
+    }
+
+namespace std
+{
+    template <>
+    struct hash<Pos>
+    {
+        size_t operator()( const Pos& k ) const
+        {
+            // Compute individual hash values for first, second and third
+            // http://stackoverflow.com/a/1646913/126995
+            size_t res = 17;
+            res = res * 31 + hash<int>()( k.x );
+            res = res * 31 + hash<int>()( k.y );
+            return res;
+        }
+    };
+}
+
 Cell::~Cell()
 {
 

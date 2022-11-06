@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 
+
 /*
     Handles drawing of the game
 */
@@ -36,7 +37,7 @@ public:
     }
     void set(int value, int pos)
     {
-        points.at(pos) = value;
+        points[pos] = value;
     }
     void cellsToTexture()
     {
@@ -45,15 +46,15 @@ public:
         cells.setPrimitiveType(sf::Quads);
         cells.resize(this->sizeX * sizeY * 4);
 
-        for (int i = 0; i < sizeY; i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            for (int j = 0; j < sizeX; j++)
+            for (int j = 0; j < sizeY; j++)
             {
 
                 int currentCell = points[i + (j * sizeY)];
-
-                if (currentCell != 1)
-                {
+                
+                if (currentCell != 0)
+                 {
 
                     sf::Vertex *quad = &cells[(i + j * sizeX) * 4];
                     quad[0].position = sf::Vector2f(i * sizeX, j * sizeY);
@@ -65,8 +66,8 @@ public:
                     quad[1].color = sf::Color::Blue;
                     quad[2].color = sf::Color::Green;
                     quad[3].color = sf::Color::Black;
-                }
-                if (currentCell == 0)
+               }
+                 if (currentCell == 0)
                 {
                     sf::Vertex *quad = &cells[(i + j * sizeX) * 4];
                     quad[0].position = sf::Vector2f(i * sizeX, j * sizeY);
@@ -85,8 +86,8 @@ public:
                         quad[2].color = sf::Color::Blue;
                         quad[3].color = sf::Color::Blue;
                     }
-                }
-                // std::cout << "x" << '\n';
+                } 
+               
             }
         }
     }

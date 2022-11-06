@@ -18,6 +18,11 @@ private:
     int *updatedTable;
     float speed;
     float lastUpdate;
+    int max;
+    int may;
+    int mix;
+    int miy;
+
 
     /* data */
 public:
@@ -25,7 +30,7 @@ public:
     ~Game();
 
     void Initialize();
-
+    void set_values(int * input_arr, int sizeX, int sizeY);
     void Update();
     bool ApplyRules();
 
@@ -40,6 +45,8 @@ Game::Game(int sizeX, int sizeY, Grid *grid)
     this->numOfCells = sizeX * sizeY;
     this->updatedTable = new int[numOfCells];
     this->lastUpdate = 0.000001;
+    max = sizeX;
+    may = sizeY;
 }
 
 void Game::Initialize()
@@ -50,23 +57,7 @@ void Game::Initialize()
         for (int x = 0; x < sizeX; x++)
         {
             // cellTable[i] = nullptr;
-                cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y}}));
-                for (int i = std::max(0,x-1); i < std::min(sizeX,x+2); i++)
-                {
-                    for (int j = std::max(0,y-1); j < std::min(sizeY,y+2); j++)
-                    {
-
-                        try
-                        {
-                            cellTable.at(Pos{j, i});
-                        }
-                        catch (const std::out_of_range &e)
-                        {
-                            cellTable.insert(std::map<Pos, Cell>::value_type(Pos{j, i}, Cell(Pos{j, i})));
-                        }
-                    }
-                }
-            // std::cout << i << "\n";
+                cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y},rand() % 2}));
         }
     }
     std::cout << cellTable.size() << '\n';
@@ -75,31 +66,43 @@ void Game::Initialize()
 }
 
 bool Game::ApplyRules()
-{
+{   
+    std::map<Pos, Cell> tempTable;
+
     int count = 0;
     for (auto iter = cellTable.begin(); iter != cellTable.end(); ++iter)
     {
-        if((*iter).second.getLives() < 1 ){
-            cellTable.erase(iter);
-            continue;
-        }
-        int liveNeighbours = -(*iter).second.getCurrent();
-        for (int i = std::max(0,(*iter).first.x-1); i < std::min(sizeX,(*iter).first.x+2); i++)
+        
+        int liveNeighbours = 0;
+        max = std::max((*iter).first.x, max);
+        may = std::max((*iter).first.y, may);
+        for (int i = (*iter).first.y-1; i < (*iter).first.y+2; i++)
         {
-            for (int j = std::max(0,(*iter).first.y-1); j < std::min(sizeY,(*iter).first.y+2); j++)
+            for (int j = (*iter).first.x-1; j < (*iter).first.x+2; j++)
 
             {
+                if(i == (*iter).first.y && j == (*iter).first.x){
+                    std::cout << "skipped self" << '\n';
+
+                    continue;
+                }
                 try
                 {
-                    liveNeighbours += cellTable.at(Pos{(*iter).first.x + j, (*iter).first.y + i}).getCurrent();
+                    std::cout << "am i here" << '\n';
+
+                    liveNeighbours += cellTable.at(Pos{j,i}).getCurrent();
+                    std::cout << liveNeighbours << '\n';
                 }
                 catch (const std::out_of_range &e)
                 {
+
+                    tempTable.insert(std::map<Pos, Cell>::value_type(Pos{j,i}, Cell{Pos{j, i},0}));
 
 
                 }
             }
         }
+
         if ((*iter).second.getCurrent() == 1)
         {
             if (liveNeighbours == 2 || liveNeighbours == 3)
@@ -126,24 +129,34 @@ bool Game::ApplyRules()
         }
     }
 
+    cellTable.merge(tempTable);
+    for (auto iter = cellTable.begin(); iter != cellTable.end(); ++iter)
+    {
+        
+        int liveNeighbours = 0;
+        max = std::max((*iter).first.x, max);
+        may = std::max((*iter).first.y, may);
+        mix = std::min((*iter).first.x, mix);
+        miy = std::min((*iter).first.y, miy);
+    }
 
     return true;
 }
 
 void Game::Update()
 {
-    int mx = sizeX;
-    int my = sizeY;
-    board->setStart(mx, my);
 
-    for (std::map<Pos, Cell>::iterator iter = cellTable.begin(); iter != cellTable.end(); iter++)
+    board->setStart(max, may);
+
+    for (auto iter = cellTable.begin(); iter != cellTable.end(); iter++)
     {
-        mx = std::max((*iter).first.x, mx);
-        my = std::max((*iter).first.y, my);
+
 
         (*iter).second.setCurrent();
+        
+        
 
-        board->set((*iter).second.getCurrent(), ((*iter).first.x * (*iter).first.y + (*iter).first.x));
+        board->set((*iter).second.getCurrent(), ((max * (*iter).first.y) + (*iter).first.x));
 
 
     }
@@ -151,6 +164,24 @@ void Game::Update()
 
     board->cellsToTexture();
 }
+
+void Game::set_values(int * input_arr, int sizeX, int sizeY){
+
+    this->sizeX = sizeX;
+    this->sizeY = sizeY;
+    cellTable.clear();
+    for(int y = 0; y < sizeY; y++){
+
+        for(int x = 0; x < sizeX; x++){
+            
+            cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y}, input_arr[y*sizeX + x]}));
+
+        }
+    }
+
+}
+
+
 
 Game::~Game()
 {
