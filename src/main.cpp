@@ -17,17 +17,17 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
     window.setFramerateLimit(0);
     ImGui::SFML::Init(window);
-    
-    Grid grid(200, &window);
-    Game game(100,100, &grid);
+
+    Grid grid(25, 25, &window);
+    Game game(25,25, &grid);
 
     game.Initialize();
-    
-   
+
+
     sf::Clock clock;
     while (window.isOpen())
     {
-        
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -37,33 +37,32 @@ int main()
 
             if(event.type == sf::Event::KeyPressed){
                 if (event.key.code == sf::Keyboard::Space){
-                    
+
 
                 }
             }
-             
+
         }
-    
+
         ImGui::SFML::Update(window, clock.restart());
-        
+
         ImGui::Begin("Settings");
         ImGui::Checkbox("pause", &pause);
         ImGui::End();
 
-        if(!pause){
-            game.ApplyRules();
-            game.Update();
 
-        }
+        game.ApplyRules();
+        game.Update();
+
         window.clear();
         window.draw(grid);
         ImGui::SFML::Render(window);
         window.display();
         clock.restart();
 
-       
-        
-        
+
+
+
     }
 
     ImGui::SFML::Shutdown();

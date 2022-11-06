@@ -1,34 +1,33 @@
 #include "cell.cpp"
 #include <time.h>
 #include <math.h>
-#include <vector>
+#include <map>
+#include <stdexcept>
 
-/* 
-    This whole mess needs to be cleaned 
+/*
+    This whole mess needs to be cleaned
  */
-
 
 class Game
 {
 private:
-    std::vector<Cell> cellTable;
+    std::map<Pos, Cell> cellTable;
     Grid *board;
     int numOfCells;
     int sizeX, sizeY;
     int *updatedTable;
-    
+    float speed;
+    float lastUpdate;
+
     /* data */
 public:
     Game(int sizeX, int sizeY, Grid *grid);
     ~Game();
 
     void Initialize();
-    void Initialize(int *start, int size);
-    void Update();
-    void ApplyRules();
 
-    int liveNeighours(int i);
-    int liveNeighbours(int i);
+    void Update();
+    bool ApplyRules();
 
     void neighbours(int i);
 };
@@ -40,204 +39,120 @@ Game::Game(int sizeX, int sizeY, Grid *grid)
     this->board = grid;
     this->numOfCells = sizeX * sizeY;
     this->updatedTable = new int[numOfCells];
+    this->lastUpdate = 0.000001;
 }
 
 void Game::Initialize()
 {
     srand(time(0));
-
-    for (int i = 0; i < numOfCells; i++)
+    for (int y = 0; y < sizeY; y++)
     {
-        //cellTable[i] = nullptr;
-        cellTable.push_back(Cell(Pos{i%sizeX,i/sizeY}));
-        cellTable[i].initNeighbors();
-        //std::cout << i << "\n";
-    }
-    for (int i = 0; i < numOfCells; i++)
-    {
-        //cellTable[i] = nullptr;
-        this->neighbours(i);
-    }
-}
-
-void Game::Initialize(int *start, int size)
-{
-    
-    this->size = size;
-    this->numOfCells = size * size;
-
-    for (int i = 0; i < numOfCells; i++)
-    {
-        //cellTable[i] = nullptr;
-        cellTable.push_back(Cell(start[i], i));
-        cellTable[i].initNeighbors();
-    }
-    for (int i = 0; i < numOfCells; i++)
-    {
-        //cellTable[i] = nullptr;
-        this->neighbours(i);
-    }
-}
-
-void Game::ApplyRules()
-{
-
-    for (int i = 0; i < numOfCells; i++)
-    {
-        int liveNeigbours = cellTable[i].numOfAliveNeigbors();
-        if (cellTable[i].getCurrent() == 1)
+        for (int x = 0; x < sizeX; x++)
         {
-            if (liveNeigbours == 2 || liveNeigbours == 3)
+            // cellTable[i] = nullptr;
+                cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y}}));
+                for (int i = std::max(0,x-1); i < std::min(sizeX,x+2); i++)
+                {
+                    for (int j = std::max(0,y-1); j < std::min(sizeY,y+2); j++)
+                    {
+
+                        try
+                        {
+                            cellTable.at(Pos{j, i});
+                        }
+                        catch (const std::out_of_range &e)
+                        {
+                            cellTable.insert(std::map<Pos, Cell>::value_type(Pos{j, i}, Cell(Pos{j, i})));
+                        }
+                    }
+                }
+            // std::cout << i << "\n";
+        }
+    }
+    std::cout << cellTable.size() << '\n';
+
+
+}
+
+bool Game::ApplyRules()
+{
+    int count = 0;
+    for (auto iter = cellTable.begin(); iter != cellTable.end(); ++iter)
+    {
+        if((*iter).second.getLives() < 1 ){
+            cellTable.erase(iter);
+            continue;
+        }
+        int liveNeighbours = -(*iter).second.getCurrent();
+        for (int i = std::max(0,(*iter).first.x-1); i < std::min(sizeX,(*iter).first.x+2); i++)
+        {
+            for (int j = std::max(0,(*iter).first.y-1); j < std::min(sizeY,(*iter).first.y+2); j++)
+
             {
-                cellTable[i].setNext(1);
-            } else {
-                cellTable[i].setNext(0);
+                try
+                {
+                    liveNeighbours += cellTable.at(Pos{(*iter).first.x + j, (*iter).first.y + i}).getCurrent();
+                }
+                catch (const std::out_of_range &e)
+                {
+
+
+                }
             }
         }
-        else if (cellTable[i].getCurrent() == 0)
+        if ((*iter).second.getCurrent() == 1)
         {
-            
-            if (liveNeigbours == 3)
+            if (liveNeighbours == 2 || liveNeighbours == 3)
             {
-
-                cellTable[i].setNext(1);
+                (*iter).second.setNext(1);
             }
             else
             {
-                cellTable[i].setNext(0);
+                (*iter).second.setNext(0);
+            }
+        }
+        else if ((*iter).second.getCurrent() == 0)
+        {
+
+            if (liveNeighbours == 3)
+            {
+
+                (*iter).second.setNext(1);
+            }
+            else
+            {
+                (*iter).second.setNext(0);
             }
         }
     }
+
+
+    return true;
 }
 
 void Game::Update()
 {
-    for (int i = 0; i < numOfCells; i++)
+    int mx = sizeX;
+    int my = sizeY;
+    board->setStart(mx, my);
+
+    for (std::map<Pos, Cell>::iterator iter = cellTable.begin(); iter != cellTable.end(); iter++)
     {
-        cellTable[i].setCurrent();
-        this->updatedTable[i] = cellTable[i].getCurrent();
-        
+        mx = std::max((*iter).first.x, mx);
+        my = std::max((*iter).first.y, my);
+
+        (*iter).second.setCurrent();
+
+        board->set((*iter).second.getCurrent(), ((*iter).first.x * (*iter).first.y + (*iter).first.x));
+
+
     }
 
-    board->setStart(updatedTable, sqrt(numOfCells));
+
     board->cellsToTexture();
 }
 
-int Game::liveNeighours(int i)
-{
-    int aliveNeigbours = 0;
-
-    //Vasen reuna
-    if (i % size != 0)
-    {
-        aliveNeigbours += cellTable[i - 1].getCurrent(); // vasen kesi
-    }
-
-    //oikee reuna
-    if (i % size != size - 1)
-    {
-        aliveNeigbours += cellTable[i + 1].getCurrent(); // Oikee keski
-    }
-
-    //yläreuna
-    if (i >= size)
-    {
-        if (i % size != 0)
-        {
-            aliveNeigbours += cellTable[i - size - 1].getCurrent(); // ylä vasen
-        }
-        if (i % size != size - 1)
-        {
-            aliveNeigbours += cellTable[i - size + 1].getCurrent(); // ylä oikee
-        }
-        aliveNeigbours += cellTable[i - size].getCurrent(); // ylä keskel
-    }
-
-    //alareuna
-    if (i < numOfCells - size)
-    {
-        aliveNeigbours += cellTable[i + size].getCurrent(); //  keski ala
-        if (i % size != 0)
-        {
-            aliveNeigbours += cellTable[i + size - 1].getCurrent(); // vasen ala
-        }
-        if (i + size != this->numOfCells - 1)
-        {
-            aliveNeigbours += cellTable[i + size + 1].getCurrent(); // oikee ala
-        }
-    }
-
-    return aliveNeigbours;
-}
-int Game::liveNeighbours(int i)
-{
-    int aliveNeigbours = 0;
-    if (i != 0)
-    {
-        aliveNeigbours += cellTable[(i + size) % this->numOfCells].getCurrent();     //alas
-        aliveNeigbours += cellTable[(i + size) % this->numOfCells + 1].getCurrent(); //alas oikee
-        aliveNeigbours += cellTable[(i + size) % this->numOfCells - 1].getCurrent(); //alas vasen
-        aliveNeigbours += cellTable[(i - size) % this->numOfCells].getCurrent();     //ylös
-        aliveNeigbours += cellTable[(i - size) % this->numOfCells + 1].getCurrent(); //ylös oikee
-        aliveNeigbours += cellTable[(i - size) % this->numOfCells - 1].getCurrent(); //ylös vasen
-    }
-    return aliveNeigbours;
-}
-
-void Game::neighbours(int i){
-    
-    //yläreuna
-    if (i >= size)
-    {
-        if (i % size != 0)
-        {
-            cellTable[i].addNeighbor(&cellTable[i - size - 1]); // ylä vasen
-        }
-
-        cellTable[i].addNeighbor(&cellTable[i - size]); // ylä keskel
-
-        if (i % size != size - 1)
-        {
-            cellTable[i].addNeighbor(&cellTable[i - size + 1]); // ylä oikee
-        }
-        
-    }
-
-    //oikee reuna
-    if (i % size != size - 1)
-    {
-        this->cellTable[i].addNeighbor(&cellTable[i + 1]); // Oikee keski
-    }
-
-     //alareuna
-    if (i < numOfCells - size)
-    {   
-        if (i + size != this->numOfCells - 1)
-        {
-            cellTable[i].addNeighbor(&cellTable[i + size + 1]); // oikee ala
-        }
-
-        cellTable[i].addNeighbor(&cellTable[i + size]); //  keski ala
-
-        if (i % size != 0)
-        {
-            cellTable[i].addNeighbor(&cellTable[i + size - 1]); // vasen ala
-        }
-        
-    }
-
-    //Vasen reuna
-    if (i % size != 0)
-    {
-        cellTable[i].addNeighbor(&cellTable[i - 1]); // vasen kesi
-    }
-
-
-    
-}
-
-
 Game::~Game()
 {
-    delete [] updatedTable;
+    delete[] updatedTable;
 }

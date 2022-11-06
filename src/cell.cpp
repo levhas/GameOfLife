@@ -2,6 +2,12 @@
     This mess represents single cell in the grid,
     I have no clue when and why I made the decision, that this class also counts the neighbouring cells
 */
+struct Pos
+{
+    int x;
+    int y;
+};
+
 class Cell
 {
 private:
@@ -9,53 +15,42 @@ private:
     int current;
     int next;
     int id;
-    int numOfNeighbors;  
+    int numOfNeighbors;
     Cell * neighbors[8];
     int life;
     bool changed;
-    
+
 public:
-    Cell(int current, int id);
-    Cell(int id);
-    Cell(Pos pos);
+    Cell(Pos position);
     Cell();
     ~Cell();
+    Pos pos;
+
     void setCurrent();
     void setNext(int next);
     int getCurrent();
     int getNext();
     void addNeighbor(Cell *neighbor);
     void initNeighbors();
-     
+    int getLives();
     void setNeighbors(Cell *neighbor, int size);
     int numOfAliveNeigbors();
 };
 
-Cell::Cell() :
-    next(0),
-    current(rand()%2),
-    id()
-{    
-    numOfNeighbors = 0;
+Cell::Cell(Pos position) :
+    pos(position)
+{
+    current = 1;
+    next = 0;
     life = 10;
     changed = false;
-} 
+}
 
-Cell::Cell(int id) :
-    next(0),
-    current(rand()%2),
-    id(id)
-{    
-    numOfNeighbors = 0;
-    changed = false;
-    
-}    
-Cell::Cell(int current, int id) :
-    current(current),
-    next(current),
-    id(id)
+Cell::Cell()
 {
-    numOfNeighbors = 0;
+    current = 1;
+    next = 0;
+    life = 10;
     changed = false;
 }
 
@@ -72,19 +67,20 @@ int Cell::getCurrent(){
     if(!changed){
         life--;
     }
+    changed = false;
     return current;
 }
 
 void Cell::setCurrent(){
     this->current = this->next;
     this->next = 0;
-    
+
 }
 void Cell::addNeighbor(Cell *neighbor){
-    
+
     this->neighbors[numOfNeighbors] = neighbor;
     this->numOfNeighbors++;
-    
+
 }
 
 void Cell::initNeighbors(){
@@ -98,15 +94,19 @@ int Cell::numOfAliveNeigbors(){
     }
     return alive;
 }
+int Cell::getLives(){
+    return this->life;
+}
 
 
-struct Pos
-{
-    int x;
-    int y;
-};
 
+bool operator < (const Cell& l, const Cell& r) {
+        return (l.pos<r.pos);
+    }
+bool operator < (const Pos& l, const Pos& r) {
+        return (l.x<r.x || (l.x==r.x && l.y<r.y));
+    }
 Cell::~Cell()
 {
-    
+
 }
