@@ -15,25 +15,25 @@ int main()
 {
     bool pause = false;
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
-    window.setFramerateLimit(0);
-    ImGui::SFML::Init(window);
+    window.setFramerateLimit(1);
+    //ImGui::SFML::Init(window);
 
-    Grid grid(50, 50, &window);
-    Game game(50, 50, &grid);
+    Grid grid(40, 40, &window);
+    Game game(40, 40, &grid);
 
-    game.Initialize();
-    /* int testgrid[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   // game.Initialize();
+    int testgrid[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
     0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    game.set_values(testgrid, 10, 10); 
- */
+    game.set_values(testgrid, 10, 10);
+
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -41,7 +41,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            ImGui::SFML::ProcessEvent(event);
+            //ImGui::SFML::ProcessEvent(event);
             if (event.type == sf::Event::Closed)
                 window.close();
 
@@ -54,11 +54,11 @@ int main()
 
         }
 
-        ImGui::SFML::Update(window, clock.restart());
+        //ImGui::SFML::Update(window, clock.restart());
 
-        ImGui::Begin("Settings");
-        ImGui::Checkbox("pause", &pause);
-        ImGui::End();
+        //ImGui::Begin("Settings");
+        //ImGui::Checkbox("pause", &pause);
+        //ImGui::End();
 
 
         game.ApplyRules();
@@ -66,7 +66,7 @@ int main()
 
         window.clear();
         window.draw(grid);
-        ImGui::SFML::Render(window);
+        //ImGui::SFML::Render(window);
         window.display();
         clock.restart();
 
@@ -75,7 +75,7 @@ int main()
 
     }
 
-    ImGui::SFML::Shutdown();
+    //ImGui::SFML::Shutdown();
 
     return 0;
 }

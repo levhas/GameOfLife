@@ -2,6 +2,8 @@
     This mess represents single cell in the grid,
     I have no clue when and why I made the decision, that this class also counts the neighbouring cells
 */
+#include <SFML/Graphics.hpp>
+
 struct Pos
 {
     int x;
@@ -19,6 +21,7 @@ private:
     Cell * neighbors[8];
     int life;
     bool changed;
+
 
 public:
     Cell(Pos position);
@@ -51,14 +54,14 @@ Cell::Cell(Pos position, int value) :
 {
     current = value;
     next = 1;
-    life = 10;
+    life = 5;
     changed = false;
 }
 Cell::Cell()
 {
     current = 1;
     next = 1;
-    life = 10;
+    life = 5;
     changed = false;
 }
 
@@ -72,15 +75,17 @@ int Cell::getNext(){
 }
 
 int Cell::getCurrent(){
-    if(!changed && current == 0){
-        life--;
-    }
-    life = 10;
     changed = false;
     return current;
 }
 
 void Cell::setCurrent(){
+    if(current == 0 && next == 0){
+        life -= 1;
+    }
+    else{
+        life = 5;
+    }
     this->current = this->next;
     this->next = 0;
 
