@@ -23,6 +23,10 @@ private:
     bool changed;
 
 
+
+
+
+
 public:
     Cell(Pos position);
     Cell();
@@ -39,6 +43,7 @@ public:
     int getLives();
     void setNeighbors(Cell *neighbor, int size);
     int numOfAliveNeigbors();
+
 };
 
 Cell::Cell(Pos position) :
@@ -53,8 +58,8 @@ Cell::Cell(Pos position, int value) :
     pos(position)
 {
     current = value;
-    next = 1;
-    life = 5;
+    next = 0;
+    life = 10;
     changed = false;
 }
 Cell::Cell()
@@ -84,7 +89,7 @@ void Cell::setCurrent(){
         life -= 1;
     }
     else{
-        life = 5;
+        life = 10;
     }
     this->current = this->next;
     this->next = 0;

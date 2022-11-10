@@ -5,43 +5,58 @@
 #include "grid.cpp"
 #include "game.cpp"
 #include <SFML/System/Clock.hpp>
-
+#include <sstream>
 #include <imgui-SFML.h>
 #include <imgui.h>
 
 
 
+
 int main()
 {
+    sf::Clock clock;
+
+
     bool pause = false;
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
-    window.setFramerateLimit(1);
-    //ImGui::SFML::Init(window);
+    window.setFramerateLimit(0);
+    ImGui::SFML::Init(window);
 
-    Grid grid(40, 40, &window);
-    Game game(40, 40, &grid);
-
-   // game.Initialize();
-    int testgrid[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    Grid grid(200, 200, &window);
+    Game game(200, 200, &grid);
+    int gen = 0;
+    game.Initialize();
+    int spinner[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    game.set_values(testgrid, 10, 10);
+    int testgrid[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    //game.set_values(testgrid, 10, 10);
+    sf::Time frame_start = clock.getElapsedTime();
 
-    sf::Clock clock;
     while (window.isOpen())
     {
+
 
         sf::Event event;
         while (window.pollEvent(event))
         {
-            //ImGui::SFML::ProcessEvent(event);
+            ImGui::SFML::ProcessEvent(event);
             if (event.type == sf::Event::Closed)
                 window.close();
 
@@ -54,19 +69,23 @@ int main()
 
         }
 
-        //ImGui::SFML::Update(window, clock.restart());
 
-        //ImGui::Begin("Settings");
-        //ImGui::Checkbox("pause", &pause);
-        //ImGui::End();
 
 
         game.ApplyRules();
         game.Update();
 
+        sf::Time elapsed1 = clock.getElapsedTime();
+
+        ImGui::SFML::Update(window, clock.restart());
+
+        ImGui::Begin("Settings");
+        ImGui::Text("gen: %i",gen++);
+        ImGui::Checkbox("pause", &pause);
+        ImGui::End();
         window.clear();
         window.draw(grid);
-        //ImGui::SFML::Render(window);
+        ImGui::SFML::Render(window);
         window.display();
         clock.restart();
 
@@ -75,21 +94,7 @@ int main()
 
     }
 
-    //ImGui::SFML::Shutdown();
+    ImGui::SFML::Shutdown();
 
     return 0;
 }
-
-/*
-    int[] testgrid = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-
- */

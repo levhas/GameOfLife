@@ -51,9 +51,9 @@ Game::Game(int sizeX, int sizeY, Grid *grid)
 void Game::Initialize()
 {
     srand(time(0));
-    for (int y = 4; y < sizeY - 2; y++)
+    for (int y = 0; y < sizeY; y++)
     {
-        for (int x = 4; x < sizeX - 2; x++)
+        for (int x = 0; x < sizeX; x++)
         {
             // cellTable[i] = nullptr;
             cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y}, rand() % 2}));
@@ -73,12 +73,11 @@ bool Game::ApplyRules()
     {
 
         int liveNeighbours = 0;
-        max = std::max((*iter).first.x, max);
-        may = std::max((*iter).first.y, may);
-        if ((*iter).second.getLives() < 1)
+
+         if ((*iter).second.getLives() < 1)
         {
 
-            deadCells.push_back(iter->first);
+            deadCells.push_back((*iter).first);
             continue;
         }
         for (int i = (*iter).first.y - 1; i < (*iter).first.y + 2; i++)
@@ -91,7 +90,8 @@ bool Game::ApplyRules()
 
                     continue;
                 }
-
+                this->max = std::max(j, max);
+                this->may = std::max(i, may);
                 auto ci = cellTable.find(Pos{j, i});
                 if (ci == cellTable.end())
                 {
@@ -142,16 +142,8 @@ bool Game::ApplyRules()
     cellTable.merge(tempTable);
     mix = max;
     miy = may;
+    std::cout << cellTable.size() <<'\n';
 
-    for (auto iter = cellTable.begin(); iter != cellTable.end(); ++iter)
-    {
-
-        int liveNeighbours = 0;
-        max = std::max((*iter).first.x, max);
-        may = std::max((*iter).first.y, may);
-        mix = std::max(std::min((*iter).first.x, mix), 0);
-        miy = std::max(std::min((*iter).first.y, miy), 0);
-    }
 
 
     return true;
@@ -159,22 +151,20 @@ bool Game::ApplyRules()
 
 void Game::Update()
 {
-    std::cout << "here crash?" << '\n';
 
     board->setStart(max, may, mix, miy);
-        std::cout << "2 here crash?" << '\n';
 
     for (auto iter = cellTable.begin(); iter != cellTable.end(); iter++)
     {
 
         (*iter).second.setCurrent();
-
-        board->set((*iter).second.getCurrent(), (*iter).first.x, (*iter).first.y);
+        if((*iter).first.x >= 0 && (*iter).first.y >= 0){
+            board->set((*iter).second.getCurrent(), (*iter).first.x, (*iter).first.y);
+        }
     }
-        std::cout << "3here crash?" << '\n';
 
 
-    // board->cellsToTexture();
+
 }
 
 void Game::set_values(int *input_arr, int sizeX, int sizeY)
@@ -182,7 +172,8 @@ void Game::set_values(int *input_arr, int sizeX, int sizeY)
 
     this->sizeX = sizeX;
     this->sizeY = sizeY;
-    cellTable.clear();
+    this->max = sizeX;
+    this->may = sizeY;
     for (int y = 0; y < sizeY; y++)
     {
 
