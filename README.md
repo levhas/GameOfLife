@@ -5,6 +5,23 @@ This old project is one of my first projects in which I used OOP (and c++ in gen
  
 
 ## How to run:
+
+for SFML to work, following dependenices are needed for linux:
+
+    freetype
+    x11
+    xrandr
+    udev
+    opengl
+    flac
+    ogg
+    vorbis
+    vorbisenc
+    vorbisfile
+    openal
+    pthread
+
+
 g++ is needed for building
 
 Build using the provided build.sh script and if that fails, manually building with cmake should work.
