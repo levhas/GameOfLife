@@ -21,8 +21,18 @@ public:
     }
     void setStart(int sizeX, int sizeY, int offsetX, int offsetY)
     {
+
         this->sizeX = sizeX;
         this->sizeY = sizeY;
+        //if map has expanded to negative x or y
+        //subtract the negative distance form 0 from sizeX, aka sizeX = sizeX = sizeX -- offeset
+        //sizeX grows by offset amount
+        if(offsetX < 0){
+            this->sizeX -= offsetX;
+        }
+        if(offsetY < 0){
+            this->sizeY -= offsetY;
+        }
         cells.clear();
         cells.resize((this->sizeX) * (this->sizeY) * 5);
         this->size = sizeX * sizeY;
@@ -32,11 +42,11 @@ public:
     {
 
         sf::Vertex *quad = &cells[(x + y * sizeX) * 4];
-
         quad[0].position = sf::Vector2f(x * sizeX, y * sizeY);
         quad[1].position = sf::Vector2f((x + 1) * sizeX, y * sizeY);
         quad[2].position = sf::Vector2f((x + 1) * sizeX, (y + 1) * sizeY);
         quad[3].position = sf::Vector2f(x * sizeX, (y + 1) * sizeY);
+
         if (value == 1)
         {
 

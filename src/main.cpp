@@ -72,22 +72,27 @@ int main()
 
 
 
+
+
+        ImGui::SFML::Update(window,frame_start);
+
+        ImGui::Begin("Info");
+
         game.ApplyRules();
         game.Update();
 
-        sf::Time elapsed1 = clock.getElapsedTime();
-
-        ImGui::SFML::Update(window, clock.restart());
-
-        ImGui::Begin("Settings");
         ImGui::Text("gen: %i",gen++);
+        ImGui::Text("average gen/sec: %f",gen/frame_start.asSeconds());
+        ImGui::Text("fps: %f",1/(clock.getElapsedTime().asSeconds()-frame_start.asSeconds()));
+
+        frame_start = clock.getElapsedTime();
         ImGui::Checkbox("pause", &pause);
         ImGui::End();
         window.clear();
         window.draw(grid);
         ImGui::SFML::Render(window);
         window.display();
-        clock.restart();
+
 
 
 

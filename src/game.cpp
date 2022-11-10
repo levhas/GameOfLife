@@ -1,4 +1,7 @@
 #include "cell.cpp"
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include <time.h>
 #include <math.h>
 #include <map>
@@ -55,11 +58,9 @@ void Game::Initialize()
     {
         for (int x = 0; x < sizeX; x++)
         {
-            // cellTable[i] = nullptr;
             cellTable.insert(std::map<Pos, Cell>::value_type(Pos{x, y}, Cell{Pos{x, y}, rand() % 2}));
         }
     }
-    std::cout << cellTable.size() << '\n';
 }
 
 bool Game::ApplyRules()
@@ -67,6 +68,8 @@ bool Game::ApplyRules()
 
     std::map<Pos, Cell> tempTable;
     std::vector<std::map<Pos, Cell>::key_type> deadCells;
+    this->miy = 0;
+    this->mix = 0;
 
     int count = 0;
     for (auto iter = cellTable.begin(); iter != cellTable.end(); ++iter)
@@ -92,6 +95,8 @@ bool Game::ApplyRules()
                 }
                 this->max = std::max(j, max);
                 this->may = std::max(i, may);
+                this->mix= std::min(j, mix);
+                this->miy = std::min(i, miy);
                 auto ci = cellTable.find(Pos{j, i});
                 if (ci == cellTable.end())
                 {
@@ -140,9 +145,6 @@ bool Game::ApplyRules()
     }
 
     cellTable.merge(tempTable);
-    mix = max;
-    miy = may;
-    std::cout << cellTable.size() <<'\n';
 
 
 
@@ -151,16 +153,24 @@ bool Game::ApplyRules()
 
 void Game::Update()
 {
+    ImGui::Text("active cells: %i",cellTable.size());
 
-    board->setStart(max, may, mix, miy);
+    if(this->miy > 0){
+        this->miy = 0;
+    }
+    if(this->mix > 0){
+        this->mix = 0;
+    }
+    board->setStart(this->max, this->may, this->mix, this->miy);
+    //std::cout << "mix" <<mix << "miy" << miy << '\n';
+    //std::cout << "max" <<max << "may" << may << '\n';
+
 
     for (auto iter = cellTable.begin(); iter != cellTable.end(); iter++)
     {
-
         (*iter).second.setCurrent();
-        if((*iter).first.x >= 0 && (*iter).first.y >= 0){
-            board->set((*iter).second.getCurrent(), (*iter).first.x, (*iter).first.y);
-        }
+            board->set((*iter).second.getCurrent(), (*iter).first.x - mix, (*iter).first.y - miy);
+
     }
 
 
