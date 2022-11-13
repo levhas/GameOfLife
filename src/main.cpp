@@ -8,6 +8,7 @@
 #include <sstream>
 #include <imgui-SFML.h>
 #include <imgui.h>
+#include <spdlog/spdlog.h>
 
 
 
@@ -77,13 +78,17 @@ int main()
         ImGui::SFML::Update(window,frame_start);
 
         ImGui::Begin("Info");
-
         game.ApplyRules();
         game.Update();
 
         ImGui::Text("gen: %i",gen++);
         ImGui::Text("average gen/sec: %f",gen/frame_start.asSeconds());
         ImGui::Text("fps: %f",1/(clock.getElapsedTime().asSeconds()-frame_start.asSeconds()));
+
+        if(ImGui::Button("save log")){
+            spdlog::info("average gen/sec, {}!", gen/frame_start.asSeconds());
+
+        }
 
         frame_start = clock.getElapsedTime();
         ImGui::Checkbox("pause", &pause);

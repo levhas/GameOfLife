@@ -20,7 +20,14 @@ FetchContent_Declare(
   GIT_TAG 82dc2033e51b8323857c3ae1cf1f458b3a933c35
 )
 
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog
+  GIT_TAG ad0e89cbfb4d0c1ce4d097e134eb7be67baebb36
+)
+
 FetchContent_MakeAvailable(imgui)
+add_subdirectory(spdlog)
 
 add_subdirectory(imgui-sfml)
 
