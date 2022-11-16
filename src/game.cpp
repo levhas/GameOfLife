@@ -6,6 +6,8 @@
 #include <math.h>
 #include <map>
 #include <stdexcept>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 /*
     This whole mess needs to be cleaned
@@ -25,6 +27,7 @@ private:
     int may;
     int mix;
     int miy;
+    std::shared_ptr<spdlog::logger> logger;
 
     /* data */
 public:
@@ -41,6 +44,8 @@ public:
 
 Game::Game(int sizeX, int sizeY, Grid *grid)
 {
+    this->logger = spdlog::get("basic_logger");
+
     this->sizeX = sizeX;
     this->sizeY = sizeY;
     this->board = grid;
@@ -154,6 +159,7 @@ bool Game::ApplyRules()
 void Game::Update()
 {
     ImGui::Text("active cells: %i",cellTable.size());
+    logger->debug("active cells: {}",cellTable.size());
 
     if(this->miy > 0){
         this->miy = 0;

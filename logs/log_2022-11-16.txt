@@ -1,0 +1,6 @@
+[2022-11-16 09:13:39.204] [basic_logger] [info] Starting size: X 500 Y 500
+[2022-11-16 09:13:49.614] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-16 09:13:49.464] [basic_logger] [debug] active cells: 252833
+[2022-11-16 09:13:49.600] [basic_logger] [debug] average gen/sec: 0.59409237
+[2022-11-16 09:13:49.600] [basic_logger] [debug] runtime: 8.4162s
+[2022-11-16 09:13:49.614] [basic_logger] [info] ****************** Backtrace End ********************
