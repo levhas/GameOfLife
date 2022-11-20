@@ -50,10 +50,10 @@ public:
         if (value == 1)
         {
 
-            quad[0].color = sf::Color::Red;
-            quad[1].color = sf::Color::Blue;
+            quad[0].color = sf::Color::Green;
+            quad[1].color = sf::Color::Green;
             quad[2].color = sf::Color::Green;
-            quad[3].color = sf::Color::Black;
+            quad[3].color = sf::Color::Green;
         }
 
         if (value == 0)

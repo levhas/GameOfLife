@@ -1,0 +1,48 @@
+[2022-11-17 21:30:08.372] [basic_logger] [info] Starting size: X 500 Y 500
+[2022-11-17 21:30:38.453] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:30:38.432] [basic_logger] [debug] active cells: 29090
+[2022-11-17 21:30:38.449] [basic_logger] [debug] average gen/sec: 23.616234
+[2022-11-17 21:30:38.449] [basic_logger] [debug] runtime: 30.02172s
+[2022-11-17 21:30:38.453] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:31:21.750] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:31:51.940] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:31:51.894] [basic_logger] [debug] active cells: 171540
+[2022-11-17 21:31:51.933] [basic_logger] [debug] average gen/sec: 3.398925
+[2022-11-17 21:31:51.933] [basic_logger] [debug] runtime: 30.009487s
+[2022-11-17 21:31:51.940] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:32:44.485] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:33:14.723] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:33:14.664] [basic_logger] [debug] active cells: 237235
+[2022-11-17 21:33:14.716] [basic_logger] [debug] average gen/sec: 2.4625359
+[2022-11-17 21:33:14.716] [basic_logger] [debug] runtime: 30.050323s
+[2022-11-17 21:33:14.723] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:36:52.003] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:37:22.335] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:37:22.279] [basic_logger] [debug] active cells: 212773
+[2022-11-17 21:37:22.328] [basic_logger] [debug] average gen/sec: 2.6551437
+[2022-11-17 21:37:22.328] [basic_logger] [debug] runtime: 30.130196s
+[2022-11-17 21:37:22.335] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:37:39.005] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:38:09.340] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:38:09.290] [basic_logger] [debug] active cells: 209169
+[2022-11-17 21:38:09.333] [basic_logger] [debug] average gen/sec: 2.7206764
+[2022-11-17 21:38:09.333] [basic_logger] [debug] runtime: 30.139565s
+[2022-11-17 21:38:09.340] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:39:10.235] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:39:40.474] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:39:40.425] [basic_logger] [debug] active cells: 168944
+[2022-11-17 21:39:40.467] [basic_logger] [debug] average gen/sec: 3.6267047
+[2022-11-17 21:39:40.467] [basic_logger] [debug] runtime: 30.054832s
+[2022-11-17 21:39:40.474] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:40:05.402] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:40:35.617] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:40:35.573] [basic_logger] [debug] active cells: 170473
+[2022-11-17 21:40:35.610] [basic_logger] [debug] average gen/sec: 3.4638743
+[2022-11-17 21:40:35.610] [basic_logger] [debug] runtime: 30.024183s
+[2022-11-17 21:40:35.617] [basic_logger] [info] ****************** Backtrace End ********************
+[2022-11-17 21:41:00.738] [basic_logger] [info] Starting size: X 1000 Y 1000
+[2022-11-17 21:41:30.966] [basic_logger] [info] ****************** Backtrace Start ******************
+[2022-11-17 21:41:30.917] [basic_logger] [debug] active cells: 237862
+[2022-11-17 21:41:30.959] [basic_logger] [debug] average gen/sec: 2.365395
+[2022-11-17 21:41:30.959] [basic_logger] [debug] runtime: 30.016129s
+[2022-11-17 21:41:30.966] [basic_logger] [info] ****************** Backtrace End ********************

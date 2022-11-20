@@ -49,24 +49,24 @@ public:
 Cell::Cell(Pos position) :
     pos(position)
 {
-    current = 1;
-    next = 1;
-    life = 10;
+    this->current = 1;
+    this->next = 1;
+    this->life = 10;
     changed = false;
 }
 Cell::Cell(Pos position, int value) :
     pos(position)
 {
-    current = value;
-    next = 0;
-    life = 10;
+    this->current = value;
+    this->next = value;
+    this->life = 10;
     changed = false;
 }
 Cell::Cell()
 {
-    current = 1;
-    next = 1;
-    life = 5;
+    this->current = 1;
+    this->next = 1;
+    this->life = 10;
     changed = false;
 }
 
@@ -81,18 +81,19 @@ int Cell::getNext(){
 
 int Cell::getCurrent(){
     changed = false;
-    return current;
+    return this->current;
 }
 
 void Cell::setCurrent(){
-    if(current == 0 && next == 0){
-        life -= 1;
-    }
-    else{
-        life = 10;
-    }
+
     this->current = this->next;
     this->next = 0;
+    if(this->current == 0){
+        this->life -= 1;
+    }
+    if(this->current == 1){
+        this->life += 1;
+    }
 
 }
 void Cell::addNeighbor(Cell *neighbor){
@@ -138,7 +139,7 @@ namespace std
         {
             // Compute individual hash values for first, second and third
             // http://stackoverflow.com/a/1646913/126995
-            size_t res = 17;
+            size_t res = 20;
             res = res * 31 + hash<int>()( k.x );
             res = res * 31 + hash<int>()( k.y );
             return res;

@@ -10,7 +10,16 @@
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/daily_file_sink.h>
-
+#include <regex>
+namespace ImGui
+{   
+    // https://stackoverflow.com/a/69046907
+    // ImGui::InputText() with std::string
+    // Because text input needs dynamic resizing, we need to setup a callback to grow the capacity
+    IMGUI_API bool  InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+    IMGUI_API bool  InputTextMultiline(const char* label, std::string* str, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+    IMGUI_API bool  InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+}
 
 
 int main()
@@ -18,8 +27,8 @@ int main()
     sf::Clock clock;
     auto logger = spdlog::daily_logger_mt("basic_logger", "../logs/log.txt");
 
-    int START_X = 500;
-    int START_Y = 500;
+    int START_X = 200;
+    int START_Y = 200;
     logger->info("Starting size: X {} Y {}",START_X,START_Y);
 
     logger->enable_backtrace(3);
@@ -29,11 +38,21 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
     window.setFramerateLimit(0);
     ImGui::SFML::Init(window);
-
+    int newSize[2] = {START_X, START_Y};
     Grid grid(START_X, START_Y, &window);
     Game game(START_X, START_Y, &grid);
     int gen = 0;
     game.Initialize();
+    int rpen[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+                  0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
     int spinner[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -44,7 +63,7 @@ int main()
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int testgrid[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    int glider[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
@@ -54,17 +73,18 @@ int main()
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    //game.set_values(testgrid, 10, 10);
+    //game.set_values(rpen, 10, 10);
     sf::Time frame_start = clock.getElapsedTime();
 
+            std::string s{"foo"};
 
 
     while (window.isOpen())
     {
 
-        if(frame_start.asSeconds() > 30){
+/*         if(frame_start.asSeconds() > 30){
             window.close();
-        }
+        } */
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -91,6 +111,14 @@ int main()
         ImGui::Begin("Info");
         game.ApplyRules();
         game.Update();
+        bool changed = false;
+        ImGui::InputText( "Text", &s);
+        
+        ImGui::InputInt2("x y", newSize, 0);
+        if(ImGui::Button("restart")){
+            game.setSize(newSize[0], newSize[1]);
+            game.Initialize();
+        }
 
         ImGui::Text("gen: %i",gen++);
         ImGui::Text("average gen/sec: %f",gen/frame_start.asSeconds());
